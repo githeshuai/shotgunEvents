@@ -55,6 +55,7 @@ def send_email_when_assign(sg, logger, event, args):
     fields = ["content", "sg_status_list", "sg_priority_1", "step.Step.short_name", "entity.Asset.sg_asset_type",
               "entity.Asset.code", "entity.Shot.sg_sequence", "entity.Shot.code", "entity"]
     task_info = sg.find_one("Task", filters, fields)
+    logger.info(task_info)
     step = task_info["step.Step.short_name"]
     task_name = task_info["content"]
     if task_info.entity["type"] == "Asset":
@@ -69,7 +70,9 @@ def send_email_when_assign(sg, logger, event, args):
         for user in added:
             email_address = get_user_email(sg, user["id"])
             send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:%s" % task_str)
+            logger.info("send email to %s" % user["name"])
     if removed:
         for user in removed:
             email_address = get_user_email(sg, user["id"])
             send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:%s不用你做的，恭喜！" % task_str)
+            logger.info("send email to %s" % user["name"])
