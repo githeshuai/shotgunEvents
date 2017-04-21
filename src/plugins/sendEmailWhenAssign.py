@@ -58,14 +58,18 @@ def send_email_when_assign(sg, logger, event, args):
     logger.info(task_info)
     step = task_info["step.Step.short_name"]
     task_name = task_info["content"]
+    status = task_info["sg_status_list"]
+    priority = task_info["sg_priority_1"]
     if task_info["entity"]["type"] == "Asset":
         asset_type = task_info["entity.Asset.sg_asset_type"]
         asset_name = task_info["entity.Asset.code"]
-        task_str = "Asset Type: %s\n Asset Name: %s\n Step: %s\n Task: %s" % (asset_type, asset_name, step, task_name)
+        task_str = "Asset Type: %s\n Asset Name: %s\n Step: %s\n Task: %s\nStatus: %s\nPriority: %s" % \
+                   (asset_type, asset_name, step, task_name, status, priority)
     else:
         sequence = task_info["entity.Shot.sg_sequence"]["name"]
         shot = task_info["entity.Shot.code"]
-        task_str = "Sequence: %s\n Shot: %s\n Step: %s\n Task: %s" % (sequence, shot, step, task_name)
+        task_str = "Sequence: %s\n Shot: %s\nStep: %s\n Task: %s\nStatus: %s\nPriority: %s" % \
+                   (sequence, shot, step, task_name, status, priority)
     if added:
         for user in added:
             email_address = get_user_email(sg, user["id"])
