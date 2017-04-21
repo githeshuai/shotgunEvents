@@ -58,7 +58,7 @@ def send_email_when_assign(sg, logger, event, args):
     logger.info(task_info)
     step = task_info["step.Step.short_name"]
     task_name = task_info["content"]
-    if task_info.entity["type"] == "Asset":
+    if task_info["entity"]["type"] == "Asset":
         asset_type = task_info["entity.Asset.sg_asset_type"]
         asset_name = task_info["entity.Asset.code"]
         task_str = "Asset Type:%s\n Asset Name:%s\n Step:%s\n Task:%s" % (asset_type, asset_name, step, task_name)
