@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+"""
+set task name when asset or shot create.
+task name format is {asset_name/shot_name}_{step}
+"""
+
+
+def registerCallbacks(reg):
+    matchEvents = {'Shotgun_Task_Change': ['step']}
+
+    reg.registerCallback("shotgunEventDaemon", "0d1f24f9665ef2771150e496ac5f293844275dadc63707bbb0bb652d12c6983e",
+    setTaskName, matchEvents, None)
+
+
+def setTaskName(sg, logger, event, args):
+    meta_data = event["meta"]
+    if not meta_data. has_key("in_create"):
+        return
+    if not meta_data["in_create"]:
+        return
+    filters = [["id", "is", meta_data["entity_id"]]]
+    fields = ["content", "entity", "step"]
+    task_info = sg.find_one("Task", filters, fields)
+    print task_info
+
+    old_name = task_info["content"]
+
+    entity_info = task_info["entity"]
+    step_info = task_info["step"]
+
+    step_detail = sg.find_one("Step", [["id", "is", step_info["id"]]], ["short_name"])
+    step_short_name = step_detail["short_name"]
+    if entity_info["type"] in ["Asset", "Shot"]:
+        entity_name = entity_info["name"]
+    else:
+        return
+    new_name = "%s_%s" % (entity_name, step_short_name)
+    sg.update("Task", task_info["id"], {"content": new_name})
+    logger.info("rename %s to %s" % (old_name, new_name))
