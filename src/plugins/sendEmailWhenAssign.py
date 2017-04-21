@@ -61,18 +61,18 @@ def send_email_when_assign(sg, logger, event, args):
     if task_info["entity"]["type"] == "Asset":
         asset_type = task_info["entity.Asset.sg_asset_type"]
         asset_name = task_info["entity.Asset.code"]
-        task_str = "Asset Type:%s\n Asset Name:%s\n Step:%s\n Task:%s" % (asset_type, asset_name, step, task_name)
+        task_str = "Asset Type: %s\n Asset Name: %s\n Step: %s\n Task: %s" % (asset_type, asset_name, step, task_name)
     else:
         sequence = task_info["entity.Shot.sg_sequence"]["name"]
         shot = task_info["entity.Shot.code"]
-        task_str = "Sequence:%s\n Shot:%s\n Step:%s\n Task:%s" % (sequence, shot, step, task_name)
+        task_str = "Sequence: %s\n Shot: %s\n Step: %s\n Task: %s" % (sequence, shot, step, task_name)
     if added:
         for user in added:
             email_address = get_user_email(sg, user["id"])
-            send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:%s" % task_str)
+            send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:\n\n%s" % task_str)
             logger.info("send email to %s" % user["name"])
     if removed:
         for user in removed:
             email_address = get_user_email(sg, user["id"])
-            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:%s不用你做的，恭喜！" % task_str)
+            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:\n\n%s\n不用你做的，恭喜！" % task_str)
             logger.info("send email to %s" % user["name"])
