@@ -74,5 +74,5 @@ def send_email_when_assign(sg, logger, event, args):
     if removed:
         for user in removed:
             email_address = get_user_email(sg, user["id"])
-            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:\n\n%s\n不用你做的，恭喜！" % task_str)
+            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:\n\n%s\n\n不用你做的，恭喜！" % task_str)
             logger.info("send email to %s" % user["name"])
