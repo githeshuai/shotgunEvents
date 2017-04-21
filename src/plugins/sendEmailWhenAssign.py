@@ -40,10 +40,10 @@ def registerCallbacks(reg):
     matchEvents = {'Shotgun_Task_Change': ['task_assignees']}
 
     reg.registerCallback("shotgunEventDaemon", "0d1f24f9665ef2771150e496ac5f293844275dadc63707bbb0bb652d12c6983e",
-    setTaskName, matchEvents, None)
+    send_email_when_assign, matchEvents, None)
 
 
-def setTaskName(sg, logger, event, args):
+def send_email_when_assign(sg, logger, event, args):
     sender = event["user"]
     sender_email = get_user_email(sg, sender["id"])
     meta_data = event["meta"]
@@ -52,14 +52,24 @@ def setTaskName(sg, logger, event, args):
     if not added and not removed:
         return
     filters = [["id", "is", meta_data["entity_id"]]]
-    fields = ["content"]
+    fields = ["content", "sg_status_list", "sg_priority_1", "step.Step.short_name", "entity.Asset.sg_asset_type",
+              "entity.Asset.code", "entity.Shot.sg_sequence", "entity.Shot.code", "entity"]
     task_info = sg.find_one("Task", filters, fields)
+    step = task_info["step.Step.short_name"]
     task_name = task_info["content"]
+    if task_info.entity["type"] == "Asset":
+        asset_type = task_info["entity.Asset.sg_asset_type"]
+        asset_name = task_info["entity.Asset.code"]
+        task_str = "Asset Type:%s\n Asset Name:%s\n Step:%s\n Task:%s" % (asset_type, asset_name, step, task_name)
+    else:
+        sequence = task_info["entity.Shot.sg_sequence"]["name"]
+        shot = task_info["entity.Shot.code"]
+        task_str = "Sequence:%s\n Shot:%s\n Step:%s\n Task:%s" % (sequence, shot, step, task_name)
     if added:
         for user in added:
             email_address = get_user_email(sg, user["id"])
-            send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:%s" % task_name)
+            send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:%s" % task_str)
     if removed:
         for user in removed:
             email_address = get_user_email(sg, user["id"])
-            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:%s不用你做的，恭喜！" % task_name)
+            send_email(sender_email, "123456", email_address, u"取消任务提醒", u"任务:%s不用你做的，恭喜！" % task_str)
