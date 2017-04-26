@@ -36,6 +36,18 @@ def get_user_email(sg, user_id):
     return email_address
 
 
+def get_leader(sg, user_info):
+    user_filter = [["id", "is", user_info["id"]]]
+    user = sg.find_one("HumanUser", user_filter, ["department"])
+    if not user. has_key("department"):
+        return
+    user_dep_info = user["department"]
+    user_dep_name = user_dep_info["name"]
+    leader_dep_name = "%sLeader" % user_dep_name
+    leaders = sg.find("HumanUser", [["department", "name_is", leader_dep_name]], ["email", "name"])
+    return leaders
+
+
 def registerCallbacks(reg):
     matchEvents = {'Shotgun_Task_Change': ['task_assignees']}
 
@@ -72,9 +84,18 @@ def send_email_when_assign(sg, logger, event, args):
                    (sequence, shot, step, task_name, status, priority)
     if added:
         for user in added:
+            sg.follow(user, task_info)
             email_address = get_user_email(sg, user["id"])
             send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:\n\n%s" % task_str)
             logger.info("send email to %s" % user["name"])
+            leaders = get_leader(user)
+            if not leaders:
+                logger.warning("No leader found of %s" % user["name"])
+                return
+            for leader in leaders:
+                email_add = leader["email"]
+                sg.follow(leader, task_info)
+                send_email(sender_email, "123456", email_add, u"组员新任务提醒", u"有任务分配给%s\n%s" % (user["name"], task_str))
     if removed:
         for user in removed:
             email_address = get_user_email(sg, user["id"])
