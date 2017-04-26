@@ -84,7 +84,7 @@ def send_email_when_assign(sg, logger, event, args):
                    (sequence, shot, step, task_name, status, priority)
     if added:
         for user in added:
-            sg.follow(user, task_info)
+            # sg.follow(user, task_info)
             email_address = get_user_email(sg, user["id"])
             send_email(sender_email, "123456", email_address, u"新任务提醒", u"你有新任务:\n\n%s" % task_str)
             logger.info("send email to %s" % user["name"])

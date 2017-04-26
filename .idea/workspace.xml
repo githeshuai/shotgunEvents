@@ -27,8 +27,8 @@
       <file leaf-file-name="sendEmailWhenAssign.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/plugins/sendEmailWhenAssign.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7650376">
-              <caret line="90" column="42" selection-start-line="90" selection-start-column="42" selection-end-line="90" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.7199248">
+              <caret line="92" column="70" selection-start-line="92" selection-start-column="70" selection-end-line="92" selection-end-column="70" />
               <folding>
                 <element signature="e#67#98#0" expanded="true" />
               </folding>
@@ -374,7 +374,13 @@
       <option name="project" value="LOCAL" />
       <updated>1493187880031</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="debug send email.">
+      <created>1493188189120</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1493188189120</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -406,9 +412,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="debug send email." />
     <MESSAGE value="improve sendEmailWhenAssign---&gt; follow current task and send email to leader and leader follow the task ." />
-    <option name="LAST_COMMIT_MESSAGE" value="improve sendEmailWhenAssign---&gt; follow current task and send email to leader and leader follow the task ." />
+    <MESSAGE value="debug send email." />
+    <option name="LAST_COMMIT_MESSAGE" value="debug send email." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -611,8 +617,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/plugins/sendEmailWhenAssign.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7650376">
-          <caret line="90" column="42" selection-start-line="90" selection-start-column="42" selection-end-line="90" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.7199248">
+          <caret line="92" column="70" selection-start-line="92" selection-start-column="70" selection-end-line="92" selection-end-column="70" />
           <folding>
             <element signature="e#67#98#0" expanded="true" />
           </folding>
