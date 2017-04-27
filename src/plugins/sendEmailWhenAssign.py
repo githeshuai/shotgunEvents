@@ -2,7 +2,33 @@
 """
 send email when assign to somebody
 """
-from send_email import send_email
+# -*- coding: utf-8 -*-
+from email.header import Header
+from email.MIMEText import MIMEText
+from email.MIMEMultipart import MIMEMultipart
+from email.utils import parseaddr, formataddr
+import smtplib
+
+
+def _format_addr(s):
+    name, addr = parseaddr(s)
+    return formataddr((
+        Header(name, 'utf-8').encode(),
+        addr.encode('utf-8') if isinstance(addr, unicode) else addr))
+
+
+def send_email(from_addr, password, to_addr, header, message, smtp_server='192.168.0.211'):
+    msg = MIMEMultipart()
+    msg.attach(MIMEText(message, 'plain', 'utf-8'))
+    msg['From'] = _format_addr(from_addr)
+    msg['To'] = _format_addr(to_addr)
+    msg['Subject'] = Header(header, 'utf-8').encode()
+
+    server = smtplib.SMTP(smtp_server, 25)
+    # server.set_debuglevel(1)
+    # server.login(from_addr, password)
+    server.sendmail(from_addr, to_addr, msg.as_string())
+    server.quit()
 
 
 def get_user_email(sg, user_id):
@@ -50,7 +76,7 @@ def send_email_when_assign(sg, logger, event, args):
     priority = task_info["sg_priority_1"]
     start_date = task_info["start_date"]
     due_date = task_info["due_date"]
-    description = task_info["sg_description"]
+    description = task_info["sg_description"].decode("utf-8")
     if task_info["entity"]["type"] == "Asset":
         asset_type = task_info["entity.Asset.sg_asset_type"]
         asset_name = task_info["entity.Asset.code"]
@@ -64,6 +90,7 @@ def send_email_when_assign(sg, logger, event, args):
         task_str = "Sequence: %s\n Shot: %s\nStep: %s\n Task: %s\nStatus: %s\nPriority: %s\n" \
                    "start_date: %s\ndue_date: %s\ndescription: %s\n" % \
                    (sequence, shot, step, task_name, status, priority, start_date, due_date, description)
+    print task_str
     if added:
         for user in added:
             # sg.follow(user, task_info)
