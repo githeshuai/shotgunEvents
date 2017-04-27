@@ -64,24 +64,31 @@ def send_email_when_assign(sg, logger, event, args):
     if not added and not removed:
         return
     filters = [["id", "is", meta_data["entity_id"]]]
-    fields = ["content", "sg_status_list", "sg_priority_1", "step.Step.short_name", "entity.Asset.sg_asset_type",
-              "entity.Asset.code", "entity.Shot.sg_sequence", "entity.Shot.code", "entity"]
+    fields = ["content", "sg_status_list", "sg_priority_1", "step.Step.short_name",
+              "entity.Asset.sg_asset_type", "entity.Asset.code", "entity.Shot.sg_sequence",
+              "entity.Shot.code", "entity", "start_date", "due_date", "sg_description"]
     task_info = sg.find_one("Task", filters, fields)
     logger.info(task_info)
     step = task_info["step.Step.short_name"]
     task_name = task_info["content"]
     status = task_info["sg_status_list"]
     priority = task_info["sg_priority_1"]
+    start_date = task_info["start_date"]
+    due_date = task_info["due_date"]
+    description = task_info["sg_description"]
     if task_info["entity"]["type"] == "Asset":
         asset_type = task_info["entity.Asset.sg_asset_type"]
         asset_name = task_info["entity.Asset.code"]
-        task_str = "Asset Type: %s\n Asset Name: %s\n Step: %s\n Task: %s\nStatus: %s\nPriority: %s" % \
-                   (asset_type, asset_name, step, task_name, status, priority)
+        task_str = "Asset Type: %s\n Asset Name: %s\n Step: %s\n " \
+                   "Task: %s\nStatus: %s\nPriority: %s\n start_date: %s\n" \
+                   "due_date: %s\ndescription: %s" % \
+                   (asset_type, asset_name, step, task_name, status, priority, start_date, due_date, description)
     else:
         sequence = task_info["entity.Shot.sg_sequence"]["name"]
         shot = task_info["entity.Shot.code"]
-        task_str = "Sequence: %s\n Shot: %s\nStep: %s\n Task: %s\nStatus: %s\nPriority: %s" % \
-                   (sequence, shot, step, task_name, status, priority)
+        task_str = "Sequence: %s\n Shot: %s\nStep: %s\n Task: %s\nStatus: %s\nPriority: %s\n" \
+                   "start_date: %s\ndue_date: %s\ndescription: %s\n" % \
+                   (sequence, shot, step, task_name, status, priority, start_date, due_date, description)
     if added:
         for user in added:
             # sg.follow(user, task_info)
